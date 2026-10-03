@@ -1,0 +1,2854 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    color: #eee8ff;
+
+    background: #17102d;
+
+    position: relative;
+
+    overflow-x: hidden;
+}
+
+
+/*
+    Ambient background blobs.
+
+    Two soft, blurred glows drifting very slowly
+    behind everything else. This is what makes the
+    page feel like it's breathing instead of a flat
+    gradient painted once and left alone.
+*/
+
+body::before,
+body::after {
+    content: "";
+
+    position: fixed;
+
+    width: 60vw;
+
+    height: 60vw;
+
+    border-radius: 50%;
+
+    filter: blur(90px);
+
+    z-index: -1;
+
+    pointer-events: none;
+}
+
+body::before {
+    top: -10%;
+    left: -10%;
+
+    background: rgba(90, 45, 120, 0.4);
+
+    opacity: 0.85;
+
+    animation: driftOne 16s ease-in-out infinite;
+}
+
+body::after {
+    bottom: -15%;
+    right: -10%;
+
+    background: rgba(30, 20, 75, 0.6);
+
+    opacity: 0.85;
+
+    animation: driftTwo 19s ease-in-out infinite;
+}
+
+@keyframes driftOne {
+
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translate(12vw, 10vh) scale(1.3);
+        opacity: 1;
+    }
+
+}
+
+@keyframes driftTwo {
+
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translate(-10vw, -9vh) scale(1.25);
+        opacity: 1;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    body::before,
+    body::after {
+        animation: none;
+    }
+
+}
+
+
+/* ========================= */
+/* MUSIC */
+/* ========================= */
+
+.music-toggle {
+    position: fixed;
+
+    top: 24px;
+    right: 24px;
+
+    padding: 10px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+
+    background: rgba(20, 12, 45, 0.65);
+
+    color: #eee8ff;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(12px);
+
+    z-index: 100;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.music-toggle:hover {
+    transform: translateY(-2px);
+}
+
+.music-toggle.music-on {
+    border-color: rgba(190, 160, 240, 0.5);
+
+    background: rgba(100, 65, 140, 0.35);
+}
+
+
+/* ========================= */
+/* PORTAL */
+/* ========================= */
+
+.portal {
+    width: min(900px, 90%);
+
+    margin: auto;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+}
+
+
+/* ========================= */
+/* PROGRESS */
+/* ========================= */
+
+.progress {
+    position: fixed;
+
+    top: 28px;
+    left: 28px;
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+
+    color: #aaa0c7;
+
+    z-index: 50;
+}
+
+
+/* ========================= */
+/* STEPS */
+/* ========================= */
+
+.step {
+    display: none;
+
+    width: 100%;
+
+    padding: 100px 0;
+}
+
+.step.active {
+    display: block;
+
+    animation: sectionEnter 0.6s cubic-bezier(0.22, 0.7, 0.32, 1) both;
+}
+
+/*
+    While a step is leaving, keep it rendered
+    (display: block) just long enough to play its
+    own fade/slide-out — this is what turns the old
+    hard cut into a soft crossfade between steps.
+*/
+
+.step.leaving {
+    display: block;
+
+    animation: sectionLeave 0.32s ease both;
+
+    pointer-events: none;
+}
+
+
+/*
+    Calm section transitions.
+*/
+
+@keyframes sectionEnter {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+@keyframes sectionLeave {
+
+    from {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+    to {
+        opacity: 0;
+
+        transform:
+            translateY(-14px)
+            scale(0.985);
+    }
+
+}
+
+
+/* ========================= */
+/* CONTENT */
+/* ========================= */
+
+.content {
+    width: min(650px, 100%);
+
+    margin: auto;
+}
+
+.eyebrow {
+    margin-bottom: 20px;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    color: #bca7e8;
+}
+
+h1 {
+    font-size: clamp(48px, 8vw, 82px);
+
+    line-height: 0.95;
+
+    margin-bottom: 28px;
+}
+
+h2 {
+    font-size: clamp(32px, 5vw, 48px);
+
+    margin-bottom: 18px;
+}
+
+.description {
+    max-width: 500px;
+
+    margin-bottom: 40px;
+
+    line-height: 1.7;
+
+    color: #b9b0ca;
+}
+
+
+/* ========================= */
+/* FORMS */
+/* ========================= */
+
+.form-group {
+    margin-top: 30px;
+}
+
+.form-group label,
+.conditional-field > label {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 14px;
+
+    color: #dcd4ed;
+}
+
+.form-group label span {
+    color: #817694;
+}
+
+input,
+textarea {
+    width: 100%;
+
+    padding: 15px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background: rgba(10, 6, 25, 0.55);
+
+    color: #eee8ff;
+
+    font-size: 15px;
+
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+textarea {
+    min-height: 130px;
+
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: rgba(190, 160, 240, 0.6);
+
+    box-shadow: 0 0 0 4px rgba(190, 160, 240, 0.14);
+}
+
+
+/*
+    Required field left empty. A warm glow rather
+    than a harsh red, plus a tiny shake so it's
+    noticed without feeling like an alarm.
+*/
+
+input.field-error,
+textarea.field-error {
+    border-color: rgba(230, 140, 120, 0.7);
+
+    box-shadow: 0 0 0 4px rgba(230, 140, 120, 0.14);
+
+    animation: fieldShake 0.35s ease;
+}
+
+@keyframes fieldShake {
+
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+
+}
+
+
+/* File input */
+
+input[type="file"] {
+    padding: 12px;
+
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+    margin-right: 12px;
+
+    padding: 9px 13px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #8e68b8;
+
+    color: #fff;
+
+    cursor: pointer;
+}
+
+
+/* ========================= */
+/* CONDITIONAL FIELDS */
+/* ========================= */
+
+.conditional-field {
+    display: none;
+
+    margin-top: 20px;
+
+    padding: 18px;
+
+    border-left: 2px solid rgba(190, 160, 240, 0.45);
+
+    background: rgba(10, 6, 25, 0.25);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    animation: revealField 0.4s ease both;
+}
+
+.conditional-field.show {
+    display: block;
+}
+
+.conditional-field.hiding {
+    display: block;
+
+    animation: fieldExit 0.28s ease both;
+
+    pointer-events: none;
+}
+
+@keyframes revealField {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+.field-note {
+    margin-top: 8px;
+
+    font-size: 12px;
+
+    color: #817694;
+}
+
+
+/*
+    Shared soft exit, reused by every conditional
+    block (conditional-field, custom-request-box,
+    reference-upload, custom-content) so closing
+    always fades out instead of vanishing instantly.
+*/
+
+@keyframes fieldExit {
+
+    from {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+
+        transform: translateY(-8px);
+    }
+
+}
+
+
+/* ========================= */
+/* OPTIONS */
+/* ========================= */
+
+.options {
+    display: grid;
+
+    gap: 10px;
+
+    border-radius: 14px;
+
+    transition: box-shadow 0.3s ease;
+}
+
+.options.field-error-group {
+    box-shadow: 0 0 0 3px rgba(230, 140, 120, 0.25);
+
+    animation: fieldShake 0.35s ease;
+}
+
+
+/* ========================= */
+/* QUESTION GROUPS */
+/* ========================= */
+
+/*
+    Used to cluster related questions (e.g. Content,
+    Visual identity, Anything extra) with a small
+    label and a divider, so a long form reads as a
+    few short conversations instead of one unbroken
+    checklist.
+*/
+
+.question-group {
+    margin-top: 30px;
+
+    padding-top: 28px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.question-group:first-of-type {
+    margin-top: 30px;
+
+    padding-top: 0;
+
+    border-top: none;
+}
+
+.group-label {
+    margin-bottom: 18px;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+
+    color: #bca7e8;
+}
+
+
+/* ========================= */
+/* PILL OPTIONS */
+/* ========================= */
+
+/*
+    A compact, horizontal alternative to .options
+    for short answers (Yes / No / Not sure, etc.) —
+    keeps quick choices from taking up a full-width
+    block each and reads as more direct.
+*/
+
+.pill-options {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 4px;
+}
+
+.pill {
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 20px;
+
+    background: rgba(10, 6, 25, 0.4);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    color: #ddd5eb;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.pill:hover {
+    border-color: rgba(190, 160, 240, 0.35);
+}
+
+.pill:has(input:checked) {
+    border-color: rgba(190, 160, 240, 0.65);
+
+    background: rgba(100, 65, 140, 0.22);
+
+    box-shadow: 0 0 0 3px rgba(190, 160, 240, 0.1);
+
+    color: #fff;
+}
+
+.pill input {
+    width: auto;
+}
+
+.option {
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 12px;
+
+    background: rgba(10, 6, 25, 0.4);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.option:hover {
+    border-color: rgba(190, 160, 240, 0.35);
+}
+
+.option:has(input:checked) {
+    border-color: rgba(190, 160, 240, 0.65);
+
+    background: rgba(100, 65, 140, 0.2);
+
+    box-shadow: 0 0 0 3px rgba(190, 160, 240, 0.1);
+}
+
+.option input {
+    width: auto;
+}
+
+
+/* ========================= */
+/* BUTTONS */
+/* ========================= */
+
+button {
+    font: inherit;
+}
+
+.primary-button,
+.secondary-button {
+    padding: 13px 20px;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.primary-button {
+    border: none;
+
+    background: #a77bd4;
+
+    color: #180d28;
+
+    box-shadow: 0 0 0 rgba(167, 123, 212, 0);
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 28px rgba(167, 123, 212, 0.35);
+}
+
+.secondary-button {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    background: transparent;
+
+    color: #ddd5eb;
+}
+
+.secondary-button:hover {
+    border-color: rgba(190, 160, 240, 0.4);
+
+    box-shadow: 0 6px 20px rgba(190, 160, 240, 0.12);
+}
+
+.navigation {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 45px;
+}
+
+
+/* ========================= */
+/* PAYMENT */
+/* ========================= */
+
+.payment-options {
+    display: grid;
+
+    gap: 12px;
+
+    margin-top: 30px;
+}
+
+.payment-option {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 14px;
+
+    background: rgba(10, 6, 25, 0.45);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    color: #eee8ff;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition: 0.25s ease;
+}
+
+.payment-option.is-recommended {
+    border-color: rgba(190, 160, 240, 0.4);
+}
+
+.option-badge {
+    position: absolute;
+
+    top: -10px;
+    left: 18px;
+
+    padding: 4px 12px;
+
+    border-radius: 20px;
+
+    background: linear-gradient(135deg, #e4cffc, #b285e0);
+
+    color: #17102d;
+
+    font-size: 10px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    box-shadow: 0 4px 14px rgba(167, 123, 212, 0.45);
+
+    opacity: 0;
+
+    transform: translateY(2px);
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+.payment-option.is-recommended .option-badge {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+.payment-option:hover {
+    border-color: rgba(190, 160, 240, 0.5);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 26px rgba(167, 123, 212, 0.16);
+}
+
+.payment-option span {
+    color: #8f879e;
+
+    font-size: 13px;
+}
+
+.payment-info {
+    margin-top: 20px;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    background: rgba(10, 6, 25, 0.45);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    color: #aaa0b8;
+
+    line-height: 1.6;
+}
+
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 600px) {
+
+    .music-toggle {
+        top: 16px;
+        right: 16px;
+    }
+
+    .progress {
+        top: 20px;
+        left: 18px;
+    }
+
+    .portal {
+        width: 88%;
+    }
+
+    .step {
+        padding: 100px 0 50px;
+    }
+
+    h1 {
+        font-size: 52px;
+    }
+
+    .navigation {
+        gap: 10px;
+    }
+
+}
+
+/* ========================= */
+/* CUSTOM REQUEST DROPDOWN */
+/* ========================= */
+
+.custom-request {
+    margin-top: 30px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 14px;
+
+    background: rgba(10, 6, 25, 0.35);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    overflow: hidden;
+}
+
+
+/* Main Custom button */
+
+.custom-toggle {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 17px 18px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #eee8ff;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    text-align: left;
+}
+
+.custom-toggle:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+
+.custom-arrow {
+    color: #bca7e8;
+
+    font-size: 18px;
+
+    transition: transform 0.3s ease;
+}
+
+.custom-toggle.open .custom-arrow {
+    transform: rotate(180deg);
+}
+
+
+/* Dropdown */
+
+.custom-content {
+    display: none;
+
+    padding: 0 18px 20px;
+}
+
+.custom-content.show {
+    display: block;
+
+    animation: customDrop 0.35s ease both;
+}
+
+.custom-content.hiding {
+    display: block;
+
+    animation: fieldExit 0.28s ease both;
+
+    pointer-events: none;
+}
+
+
+@keyframes customDrop {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}
+
+
+.custom-description {
+    margin-bottom: 20px;
+
+    color: #8f879e;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* ========================= */
+/* CUSTOM CHECKBOXES */
+/* ========================= */
+
+.custom-check {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    margin-top: 8px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.02);
+
+    cursor: pointer;
+
+    color: #ddd5eb;
+
+    transition: 0.25s ease;
+}
+
+.custom-check:hover {
+    border-color: rgba(190, 160, 240, 0.35);
+}
+
+.custom-check:has(input:checked) {
+    border-color: rgba(190, 160, 240, 0.55);
+
+    background: rgba(100, 65, 140, 0.16);
+
+    box-shadow: 0 0 0 3px rgba(190, 160, 240, 0.1);
+}
+
+.custom-check input {
+    width: auto;
+}
+
+
+/* ========================= */
+/* REQUEST BOX */
+/* ========================= */
+
+.custom-request-box {
+    display: none;
+
+    margin: 12px 0 18px;
+
+    padding: 18px;
+
+    border-left: 2px solid rgba(190, 160, 240, 0.4);
+
+    background: rgba(0, 0, 0, 0.12);
+
+    animation: revealField 0.35s ease both;
+}
+
+.custom-request-box.show {
+    display: block;
+}
+
+.custom-request-box.hiding {
+    display: block;
+
+    animation: fieldExit 0.28s ease both;
+
+    pointer-events: none;
+}
+
+
+/* ========================= */
+/* REFERENCE OPTIONS */
+/* ========================= */
+
+.reference-options {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 10px;
+
+    margin-bottom: 14px;
+}
+
+.reference-options label {
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 8px 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 20px;
+
+    color: #aaa0b8;
+
+    cursor: pointer;
+
+    font-size: 12px !important;
+
+    transition: 0.25s ease;
+}
+
+.reference-options label:has(input:checked) {
+    border-color: rgba(190, 160, 240, 0.55);
+
+    color: #eee8ff;
+
+    background: rgba(100, 65, 140, 0.2);
+}
+
+.reference-options input {
+    width: auto;
+}
+
+
+/* ========================= */
+/* REFERENCE UPLOAD / LINK */
+/* ========================= */
+
+.reference-upload {
+    display: none;
+
+    margin-top: 15px;
+
+    animation: revealField 0.3s ease both;
+}
+
+.reference-upload.show {
+    display: block;
+}
+
+.reference-upload.hiding {
+    display: block;
+
+    animation: fieldExit 0.28s ease both;
+
+    pointer-events: none;
+}
+
+/* ========================= */
+/* PRIORITY OPTIONS */
+/* ========================= */
+
+.priority-option {
+    align-items: flex-start !important;
+}
+
+.priority-option div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.priority-option strong {
+    color: #eee8ff;
+
+    font-size: 15px;
+}
+
+.priority-option small {
+    color: #817694;
+
+    line-height: 1.5;
+}
+
+
+/* ========================= */
+/* COST CARD */
+/* ========================= */
+
+.cost-card {
+    margin-top: 25px;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    background: rgba(8, 5, 20, 0.5);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cost-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 8px 0;
+
+    color: #aaa0b8;
+}
+
+.cost-row strong {
+    color: #eee8ff;
+}
+
+.cost-divider {
+    height: 1px;
+
+    margin: 12px 0;
+
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.cost-row.total {
+    padding-top: 14px;
+
+    color: #eee8ff;
+
+    font-size: 17px;
+}
+
+.cost-row.total strong {
+    color: #c9a9f2;
+
+    font-size: 20px;
+}
+
+
+/* ========================= */
+/* PAYMENT METHODS */
+/* ========================= */
+
+.payment-methods {
+    margin-top: 25px;
+}
+
+.payment-method-title {
+    margin-bottom: 12px;
+
+    font-size: 13px;
+
+    color: #aaa0b8;
+}
+
+.payment-method {
+    margin-right: 8px;
+
+    padding: 10px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 20px;
+
+    background: rgba(10, 6, 25, 0.4);
+
+    color: #ddd5eb;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.payment-method:hover {
+    border-color: rgba(190, 160, 240, 0.5);
+}
+
+.payment-method.selected {
+    border-color: rgba(190, 160, 240, 0.7);
+
+    background: rgba(100, 65, 140, 0.25);
+
+    color: #fff;
+
+    box-shadow: 0 0 0 3px rgba(190, 160, 240, 0.12);
+}
+
+
+/* Payment option selected */
+
+.payment-option.selected {
+    border-color: rgba(190, 160, 240, 0.7);
+
+    background: rgba(100, 65, 140, 0.2);
+
+    box-shadow: 0 0 0 3px rgba(190, 160, 240, 0.12);
+}
+
+/* ========================= */
+/* PROJECT PREFERENCE */
+/* ========================= */
+
+.project-preference {
+    margin-top: 25px;
+
+    padding: 16px 18px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    background: rgba(10, 6, 25, 0.35);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.preference-label {
+    margin-bottom: 7px;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: #817694;
+}
+
+.preference-value {
+    font-size: 17px;
+
+    color: #eee8ff;
+}
+
+/* ========================= */
+/* ORDER CONFIRMATION */
+/* ========================= */
+
+.confirmation-content {
+    text-align: center;
+}
+
+
+.order-card {
+
+    max-width: 430px;
+
+    margin: 35px auto 20px;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(15, 9, 30, 0.65);
+
+    border:
+        1px solid rgba(
+            190,
+            160,
+            240,
+            0.18
+        );
+
+    text-align: left;
+
+}
+
+
+.order-label {
+
+    margin-bottom: 6px;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    color: #8f7ba8;
+
+}
+
+
+.order-card h3 {
+
+    margin-bottom: 24px;
+
+    color: #d5b7f5;
+
+    font-size: 22px;
+
+}
+
+
+.order-detail {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 13px 0;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+
+}
+
+
+.order-detail span {
+
+    color: #817694;
+
+}
+
+
+.order-detail strong {
+
+    color: #eee8ff;
+
+    text-align: right;
+
+}
+
+
+.confirmation-note {
+
+    max-width: 420px;
+
+    margin: 0 auto;
+
+    color: #817694;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+}
+
+
+/* ========================= */
+/* CAT MESSENGER — DELIVERY SCENE */
+/* ========================= */
+
+/*
+    A small, calm delivery story:
+
+      parcel appears, alone, and waits
+      -> pause
+      -> cat enters from the left, walking slowly
+      -> cat reaches the parcel, brief pause
+      -> parcel + cat travel together to the other side
+      -> arrival, pause
+      -> cat steps aside, parcel's flaps open
+      -> a receipt emerges from the parcel and settles
+         to a comfortable, readable size
+      -> the cat leaves a small paw mark on it
+      -> the cat remains beside the receipt, and can be
+         tapped for a tiny reaction
+
+    The receipt is the client's confirmation — once it
+    has settled, this scene is the resting state; nothing
+    else replaces it underneath.
+
+    Positions are percentages of the scene's own width
+    (--box-x, --cat-x), so nothing is pinned to the
+    viewport or to a fixed "bottom: 0".
+*/
+
+.cat-messenger {
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 500;
+
+    display: flex;
+    align-items: safe center;
+    justify-content: center;
+
+    overflow-y: auto;
+
+    padding: 24px;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 28%,
+            rgba(90, 62, 150, 0.55),
+            transparent 62%
+        ),
+        linear-gradient(
+            170deg,
+            var(--galaxy-space-cadet, #1c1a3a) 0%,
+            var(--galaxy-xiketic, #150f2e) 55%,
+            var(--galaxy-deep-navy, #0b0f2e) 100%
+        );
+
+    opacity: 0;
+    visibility: hidden;
+
+    /*
+        The messenger's palette lives here, in one
+        place, so it can be changed (or swapped for a
+        different character later) without touching
+        any of the selectors below that use it.
+    */
+    --cat-color-body: #9d8ad1;
+    --cat-color-tail: #9d8ad1;
+    --cat-color-eye: #17102d;
+    --cat-color-accent: #d9c6ff;
+
+    /*
+        The wider Celesticate galaxy palette, named so
+        it's obvious what each stands for wherever it's
+        reused below.
+    */
+    --galaxy-deep-navy: #0b0f2e;
+    --galaxy-space-cadet: #1c1a3a;
+    --galaxy-xiketic: #150f2e;
+    --galaxy-slate: #2b2b45;
+    --galaxy-purple: #6a4fa0;
+    --galaxy-violet: #8f6fd1;
+
+    transition:
+        opacity 0.5s ease,
+        visibility 0s linear 0.5s;
+
+    pointer-events: none;
+}
+
+.cat-messenger.active {
+
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 0.5s ease,
+        visibility 0s linear 0s;
+
+    pointer-events: auto;
+}
+
+
+/*
+    The stage the story happens in. Tall enough to
+    hold both the small walk-in and the settled,
+    larger receipt without resizing mid-scene.
+*/
+
+.delivery-scene {
+
+    position: relative;
+
+    width: min(900px, 100%);
+    height: 580px;
+
+    --box-x: 34%;
+    --cat-x: -18%;
+}
+
+
+/* ========================= */
+/* THE PARCEL */
+/* ========================= */
+
+.delivery-box {
+
+    position: absolute;
+    top: 30%;
+    left: var(--box-x);
+
+    width: 76px;
+    height: 58px;
+
+    transform: translate(-50%, -50%);
+
+    perspective: 360px;
+
+    opacity: 0;
+
+    transition:
+        left 2.2s cubic-bezier(0.32, 0.08, 0.28, 1),
+        top 0.9s ease,
+        width 0.7s ease,
+        height 0.7s ease,
+        opacity 0.6s ease;
+}
+
+.cat-messenger.active .delivery-box {
+
+    opacity: 1;
+}
+
+
+/*
+    Once the parcel has been delivered and opened, it
+    shrinks slightly and tucks up out of the way, so it
+    reads as an emptied package resting near the scene
+    rather than competing with the receipt below.
+*/
+
+.delivery-box.delivered {
+
+    top: 26px;
+    width: 56px;
+    height: 42px;
+}
+
+
+.delivery-box-body {
+
+    position: absolute;
+    inset: 0;
+
+    border-radius: 3px;
+
+    background:
+        linear-gradient(
+            160deg,
+            rgba(178, 133, 224, 0.28),
+            rgba(15, 9, 30, 0.92)
+        );
+
+    border: 1px solid rgba(190, 160, 240, 0.4);
+
+    box-shadow: 0 4px 14px rgba(8, 4, 18, 0.45);
+
+    overflow: hidden;
+}
+
+.delivery-box-seam {
+
+    position: absolute;
+    top: 0;
+    left: 50%;
+
+    width: 1px;
+    height: 100%;
+
+    background: rgba(190, 160, 240, 0.35);
+}
+
+.delivery-box-seam-cross {
+
+    top: 50%;
+    left: 0;
+
+    width: 100%;
+    height: 1px;
+}
+
+
+/*
+    The two lid flaps. Each hinges at its own outer
+    top corner and swings up/outward like a small
+    package being opened by hand, rather than a single
+    lid flipping back.
+*/
+
+.delivery-box-flap {
+
+    position: absolute;
+    top: 0;
+
+    width: 50%;
+    height: 60%;
+
+    background:
+        linear-gradient(
+            160deg,
+            rgba(200, 165, 240, 0.4),
+            rgba(15, 9, 30, 0.95)
+        );
+
+    border: 1px solid rgba(190, 160, 240, 0.4);
+
+    transform-style: preserve-3d;
+
+    transition:
+        transform 0.9s cubic-bezier(0.3, 0.1, 0.25, 1);
+}
+
+.delivery-box-flap-left {
+
+    left: 0;
+
+    border-radius: 3px 0 0 0;
+
+    transform-origin: top left;
+}
+
+.delivery-box-flap-right {
+
+    right: 0;
+
+    border-radius: 0 3px 0 0;
+
+    transform-origin: top right;
+}
+
+.delivery-box.open .delivery-box-flap-left {
+
+    transform: rotateY(-125deg);
+}
+
+.delivery-box.open .delivery-box-flap-right {
+
+    transform: rotateY(125deg);
+}
+
+
+/* ========================= */
+/* THE RECEIPT */
+/* ========================= */
+
+.delivery-receipt {
+
+    position: absolute;
+    top: 30%;
+    left: var(--box-x);
+
+    width: 168px;
+
+    padding: 16px 18px 20px;
+
+    /*
+        Clean, close-to-rectangular corners — a
+        receipt, not a rounded dashboard card.
+    */
+    border-radius: 2px;
+
+    background: var(--galaxy-xiketic, #16102c);
+
+    background-image:
+        repeating-linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.015) 0px,
+            rgba(255, 255, 255, 0.015) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+
+    border: 1px solid rgba(190, 160, 240, 0.28);
+
+    box-shadow: 0 10px 26px rgba(6, 3, 14, 0.55);
+
+    transform: translate(-50%, -30%) scale(0.28);
+
+    opacity: 0;
+
+    transition:
+        left 1s cubic-bezier(0.3, 0.1, 0.25, 1),
+        top 1s cubic-bezier(0.3, 0.1, 0.25, 1),
+        width 1s cubic-bezier(0.3, 0.1, 0.25, 1),
+        padding 1s cubic-bezier(0.3, 0.1, 0.25, 1),
+        transform 1s cubic-bezier(0.3, 0.1, 0.25, 1),
+        opacity 0.5s ease;
+}
+
+.delivery-receipt.emerging {
+
+    top: 6%;
+
+    opacity: 1;
+
+    transform: translate(-50%, -30%) scale(0.55);
+}
+
+.delivery-receipt.settled {
+
+    left: 50%;
+    top: 72px;
+
+    width: min(440px, 58%);
+
+    padding: 32px 34px 38px;
+
+    opacity: 1;
+
+    transform: translate(-50%, 0) scale(1);
+
+    /*
+        Subtle galaxy paper: a dark navy/purple base,
+        two soft, low-opacity nebula washes, and a
+        small, fixed handful of tiny star specks —
+        never behind the text itself, just in the
+        margins, so it stays "stationery", not
+        "wallpaper".
+    */
+    background-image:
+        radial-gradient(1px 1px at 12% 14%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(1px 1px at 88% 20%, rgba(255, 255, 255, 0.45), transparent 60%),
+        radial-gradient(1px 1px at 92% 62%, rgba(255, 255, 255, 0.4), transparent 60%),
+        radial-gradient(1px 1px at 8% 70%, rgba(255, 255, 255, 0.4), transparent 60%),
+        radial-gradient(1px 1px at 22% 90%, rgba(255, 255, 255, 0.3), transparent 60%),
+        radial-gradient(ellipse at 18% 10%, rgba(178, 133, 224, 0.16), transparent 55%),
+        radial-gradient(ellipse at 85% 85%, rgba(120, 80, 170, 0.14), transparent 55%),
+        repeating-linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.015) 0px,
+            rgba(255, 255, 255, 0.015) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+
+    box-shadow:
+        0 16px 34px rgba(6, 3, 14, 0.5),
+        0 0 26px rgba(178, 133, 224, 0.12);
+}
+
+.delivery-receipt.settled .delivery-receipt-brand {
+
+    font-size: 16px;
+    letter-spacing: 4px;
+
+    margin-bottom: 16px;
+}
+
+.delivery-receipt.settled .delivery-receipt-heading {
+
+    font-size: 17px;
+
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+}
+
+.delivery-receipt.settled .delivery-receipt-rows {
+
+    gap: 12px;
+}
+
+.delivery-receipt.settled .delivery-receipt-row {
+
+    font-size: 14px;
+}
+
+.delivery-receipt.settled .delivery-receipt-row span {
+
+    font-size: 10.5px;
+}
+
+.delivery-receipt.settled .delivery-signature {
+
+    margin-top: 22px;
+    padding-top: 18px;
+}
+
+
+.delivery-receipt-brand {
+
+    font-size: 11px;
+    letter-spacing: 3px;
+
+    text-align: center;
+
+    color: #d5b7f5;
+
+    margin-bottom: 10px;
+}
+
+.delivery-receipt-heading {
+
+    font-size: 13px;
+
+    text-align: center;
+
+    color: #eee8ff;
+
+    padding-bottom: 10px;
+
+    margin-bottom: 10px;
+
+    border-bottom: 1px dashed rgba(190, 160, 240, 0.25);
+}
+
+
+.delivery-receipt-rows {
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.delivery-receipt-row {
+
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+
+    font-size: 11px;
+}
+
+.delivery-receipt-row span {
+
+    color: #8f7ba8;
+
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 9px;
+
+    padding-top: 2px;
+}
+
+.delivery-receipt-row strong {
+
+    color: #eee8ff;
+
+    text-align: right;
+
+    max-width: 60%;
+
+    font-weight: 400;
+}
+
+
+/*
+    The cat's signature: a small galaxy-toned paw
+    stamp with its name beneath, sized and placed like
+    a real stamp in the receipt's corner — never large
+    enough to compete with the order details above it.
+*/
+
+/*
+    The cat's signature: a small galaxy-toned paw
+    stamp with its name and "Received" beneath, set in
+    normal flow after the order rows with a dashed rule
+    above it — a receipt's footer stamp, not a floating
+    badge, so it can never land on top of the details
+    above it regardless of how many rows are shown.
+*/
+
+.delivery-signature {
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+
+    margin-top: 16px;
+    padding-top: 14px;
+
+    border-top: 1px dashed rgba(190, 160, 240, 0.25);
+
+    opacity: 0;
+
+    transform: scale(0.5) translateY(4px);
+    transform-origin: bottom right;
+
+    transition:
+        transform 0.45s cubic-bezier(0.34, 1.4, 0.4, 1),
+        opacity 0.3s ease;
+}
+
+.delivery-signature.stamped {
+
+    opacity: 1;
+
+    transform: scale(1) translateY(0);
+}
+
+.delivery-paw-svg {
+
+    width: 20px;
+    height: 20px;
+
+    filter:
+        drop-shadow(0 0 5px rgba(168, 130, 255, 0.7))
+        drop-shadow(0 0 10px rgba(90, 160, 255, 0.28));
+}
+
+.delivery-signature-name {
+
+    font-size: 9px;
+    letter-spacing: 1px;
+    font-style: italic;
+
+    color: var(--cat-color-accent);
+
+    opacity: 0.9;
+}
+
+.delivery-signature-received {
+
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    color: #8f7ba8;
+}
+
+.delivery-receipt.settled .delivery-paw-svg {
+
+    width: 30px;
+    height: 30px;
+}
+
+.delivery-receipt.settled .delivery-signature-name {
+
+    font-size: 13px;
+}
+
+.delivery-receipt.settled .delivery-signature-received {
+
+    font-size: 10px;
+}
+
+
+/* ========================= */
+/* THE PILLOW */
+/* ========================= */
+
+/*
+    A small resting spot for the cat, appearing at the
+    same moment the cat settles into its final pose.
+    Shares the cat's own --cat-x so the two always stay
+    aligned without any extra positioning math.
+*/
+
+.delivery-pillow {
+
+    position: absolute;
+    top: 478px;
+    left: var(--cat-x);
+
+    width: clamp(150px, 26vw, 240px);
+    height: 36px;
+
+    transform: translate(-50%, -50%) scale(0.7);
+
+    border-radius: 50% / 60%;
+
+    background:
+        linear-gradient(
+            160deg,
+            rgba(210, 180, 245, 0.55),
+            rgba(120, 85, 165, 0.55)
+        );
+
+    border: 1px solid rgba(190, 160, 240, 0.35);
+
+    box-shadow: 0 6px 14px rgba(8, 4, 18, 0.35);
+
+    opacity: 0;
+
+    transition:
+        left 1.9s cubic-bezier(0.32, 0.08, 0.28, 1),
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+.delivery-pillow.visible {
+
+    opacity: 0.9;
+
+    transform: translate(-50%, -50%) scale(1);
+}
+
+
+/* ========================= */
+/* THE CAT */
+/* ========================= */
+
+.delivery-cat {
+
+    position: absolute;
+    top: 32%;
+    left: var(--cat-x);
+
+    transform: translate(-50%, -50%);
+
+    opacity: 0;
+
+    cursor: pointer;
+
+    transition:
+        left 1.9s cubic-bezier(0.32, 0.08, 0.28, 1),
+        top 0.7s ease,
+        opacity 0.35s ease;
+}
+
+.delivery-cat:focus-visible {
+
+    outline: 2px solid rgba(190, 160, 240, 0.6);
+    outline-offset: 4px;
+    border-radius: 8px;
+}
+
+.delivery-cat.walking,
+.delivery-cat.delivering,
+.delivery-cat.resting {
+
+    opacity: 1;
+}
+
+/*
+    "parked" moves the cat into its final spot while
+    it's still invisible (no opacity change) — used
+    while the parcel opens and the receipt emerges, so
+    the cat is already in place, ready to calmly fade
+    in once the receipt has fully settled, rather than
+    sliding in a second time.
+*/
+
+.delivery-cat.parked,
+.delivery-cat.resting {
+
+    /*
+        Parked sits a touch higher than resting, so when
+        the cat fades back in it gently lowers itself
+        onto the pillow.
+    */
+    top: 380px;
+}
+
+.delivery-cat.resting {
+
+    top: 408px;
+
+    transition:
+        left 1.9s cubic-bezier(0.32, 0.08, 0.28, 1),
+        top 1.1s ease,
+        opacity 0.6s ease;
+}
+
+
+/*
+    Calm, gentle walking impression — a small, slow
+    bob, not a bounce. Only plays while actually
+    moving.
+*/
+
+.delivery-cat.walking .delivery-cat-svg,
+.delivery-cat.delivering .delivery-cat-svg {
+
+    animation: deliveryCatStep 1s ease-in-out infinite;
+}
+
+@keyframes deliveryCatStep {
+
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-1.5px);
+    }
+
+}
+
+
+/*
+    One small, subtle beat when the cat first reaches
+    the parcel — not a loop.
+*/
+
+.delivery-cat.nudge .delivery-cat-svg {
+
+    animation: deliveryCatNudge 0.6s ease;
+}
+
+@keyframes deliveryCatNudge {
+
+    0%, 100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    45% {
+        transform: translateX(1.5px) rotate(-2deg);
+    }
+
+    75% {
+        transform: translateX(-1px) rotate(1deg);
+    }
+
+}
+
+
+/*
+    The tiny, optional tap reaction — a small head/tail
+    flick. Single beat, never a loop.
+*/
+
+.delivery-cat.reacting .delivery-cat-svg {
+
+    animation: deliveryCatReact 0.7s ease;
+}
+
+@keyframes deliveryCatReact {
+
+    0%, 100% {
+        transform: rotate(0deg) translateY(0);
+    }
+
+    30% {
+        transform: rotate(-4deg) translateY(-2px);
+    }
+
+    60% {
+        transform: rotate(3deg) translateY(0);
+    }
+
+}
+
+
+/*
+    Sleeping: the cat has finished its delivery. Head
+    lowers, eye closes, and a slow breath is all that
+    moves. "sleeping" is added by script a moment after
+    the cat lands on its pillow.
+*/
+
+.cat-messenger-head {
+
+    transform-box: view-box;
+    transform-origin: 40px 28px;
+
+    transition: transform 1.4s ease;
+}
+
+.cat-messenger-eye {
+
+    transform-box: fill-box;
+    transform-origin: center;
+
+    transition: transform 1s ease;
+}
+
+.delivery-cat.sleeping .cat-messenger-head {
+
+    transform: rotate(16deg) translate(0, 2px);
+}
+
+.delivery-cat.sleeping .cat-messenger-eye {
+
+    transform: scale(2.2, 0.3);
+}
+
+.delivery-cat.resting.sleeping .delivery-cat-svg {
+
+    transform-origin: 50% 90%;
+
+    animation: deliveryCatSleep 5.5s ease-in-out infinite;
+}
+
+@keyframes deliveryCatSleep {
+
+    0%, 100% {
+        transform: scale(1, 1);
+    }
+
+    50% {
+        transform: scale(1.012, 1.035);
+    }
+
+}
+
+
+/* small, slow "z z" drifting up from the sleeping cat */
+
+.delivery-cat-zzz {
+
+    position: absolute;
+    top: 2px;
+    right: -6px;
+
+    font-size: 15px;
+    font-style: italic;
+    letter-spacing: 3px;
+
+    color: var(--cat-color-accent);
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.delivery-cat.sleeping .delivery-cat-zzz {
+
+    animation: deliveryCatZzz 5.5s ease-in-out infinite;
+}
+
+@keyframes deliveryCatZzz {
+
+    0% {
+        opacity: 0;
+        transform: translate(0, 6px);
+    }
+
+    35% {
+        opacity: 0.75;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(8px, -16px);
+    }
+
+}
+
+
+/*
+    A tap while resting should play the reaction, not
+    the sleeping breath — same specificity as the
+    sleeping rule above, and later in source order, so
+    it wins.
+*/
+
+.delivery-cat.resting.reacting .delivery-cat-svg {
+
+    animation: deliveryCatReact 0.7s ease;
+}
+
+
+.delivery-cat-svg {
+
+    width: clamp(84px, 11vw, 100px);
+    height: auto;
+
+    display: block;
+
+    transition: width 0.5s ease;
+
+    fill: var(--cat-color-body);
+
+    filter:
+        drop-shadow(0 2px 4px rgba(8, 4, 18, 0.4));
+}
+
+.delivery-cat.parked .delivery-cat-svg,
+.delivery-cat.resting .delivery-cat-svg {
+
+    /* the final, clearly readable size (~0.35x the receipt's height) */
+    width: clamp(120px, 20vw, 190px);
+}
+
+.cat-messenger-eye {
+    fill: var(--cat-color-eye);
+}
+
+.cat-messenger-inner-ear {
+    fill: #cbb6f0;
+    opacity: 0.85;
+}
+
+.cat-messenger-hip,
+.cat-messenger-leg {
+    fill: var(--cat-color-body);
+}
+
+.cat-messenger-leg-back {
+    opacity: 0.78;
+}
+
+.cat-messenger-nose {
+    fill: #5a4878;
+}
+
+.cat-messenger-mouth,
+.cat-messenger-whisker {
+    fill: none;
+    stroke: #3a2d55;
+    stroke-linecap: round;
+}
+
+.cat-messenger-mouth {
+    stroke-width: 0.7;
+}
+
+.cat-messenger-whisker {
+    stroke-width: 0.45;
+    opacity: 0.55;
+}
+
+.cat-messenger-tail {
+    fill: none;
+    stroke: var(--cat-color-tail);
+    stroke-width: 3.2;
+    stroke-linecap: round;
+}
+
+.cat-messenger-tail-wrap {
+    transform-box: view-box;
+    transform-origin: 18px 30px;
+    animation: catTailRest 3.6s ease-in-out infinite;
+}
+
+.delivery-cat.walking .cat-messenger-tail-wrap,
+.delivery-cat.delivering .cat-messenger-tail-wrap {
+    animation: catTailWalk 0.9s ease-in-out infinite;
+}
+
+.delivery-cat.nudge .cat-messenger-tail-wrap,
+.delivery-cat.reacting .cat-messenger-tail-wrap {
+    animation: catTailFlick 0.55s ease;
+}
+
+.delivery-cat.sleeping .cat-messenger-tail-wrap {
+    animation: catTailSleep 4.8s ease-in-out infinite;
+}
+
+@keyframes catTailRest {
+    0%, 100% { transform: rotate(6deg); }
+    50% { transform: rotate(-10deg); }
+}
+
+@keyframes catTailWalk {
+    0%, 100% { transform: rotate(12deg); }
+    50% { transform: rotate(-16deg); }
+}
+
+@keyframes catTailFlick {
+    0%, 100% { transform: rotate(0deg); }
+    35% { transform: rotate(18deg); }
+    65% { transform: rotate(-14deg); }
+}
+
+@keyframes catTailSleep {
+    0%, 100% { transform: rotate(4deg); }
+    50% { transform: rotate(-6deg); }
+}
+
+
+.delivery-cat-bubble {
+
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+
+    margin-bottom: 8px;
+
+    padding: 5px 10px;
+
+    border-radius: 10px;
+
+    background: rgba(24, 15, 42, 0.95);
+
+    border: 1px solid rgba(190, 160, 240, 0.3);
+
+    color: #eee8ff;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    opacity: 0;
+
+    transform: translate(-50%, 4px);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+
+    pointer-events: none;
+}
+
+.delivery-cat-bubble.visible {
+
+    opacity: 1;
+
+    transform: translate(-50%, 0);
+}
+
+
+/*
+    Reduced motion: the story is skipped entirely, not
+    just slowed. The receipt is already settled, the
+    signature is already stamped, the cat is already
+    resting on its pillow, with no idle motion either —
+    same information, no motion at all.
+*/
+
+.cat-messenger.reduced .delivery-box,
+.cat-messenger.reduced .delivery-receipt,
+.cat-messenger.reduced .delivery-cat,
+.cat-messenger.reduced .delivery-pillow,
+.cat-messenger.reduced .delivery-signature,
+.cat-messenger.reduced .delivery-box-flap {
+
+    transition: none;
+}
+
+.cat-messenger.reduced .delivery-cat-svg,
+.cat-messenger.reduced .cat-messenger-eye,
+.cat-messenger.reduced .delivery-cat-zzz,
+.cat-messenger.reduced .cat-messenger-tail-wrap {
+
+    animation: none;
+}
+
+.cat-messenger.reduced .cat-messenger-head,
+.cat-messenger.reduced .cat-messenger-eye,
+.cat-messenger.reduced .delivery-cat-svg {
+
+    transition: none;
+}
+
+.cat-messenger.reduced .delivery-cat.sleeping .delivery-cat-zzz {
+
+    opacity: 0.6;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    .delivery-box,
+    .delivery-box-flap,
+    .delivery-receipt,
+    .delivery-cat,
+    .delivery-pillow,
+    .delivery-signature {
+        transition: none;
+    }
+
+    .delivery-cat-svg,
+    .cat-messenger-eye,
+    .delivery-cat-zzz,
+    .cat-messenger-tail-wrap {
+        animation: none;
+    }
+
+    .cat-messenger-head,
+    .cat-messenger-eye,
+    .delivery-cat-svg {
+        transition: none;
+    }
+
+}
+
+
+@media (max-width: 620px) {
+
+    .cat-messenger {
+        padding: 16px;
+    }
+
+    .delivery-scene {
+        height: 600px;
+    }
+
+    .delivery-box {
+        width: 58px;
+        height: 44px;
+    }
+
+    .delivery-box.delivered {
+        top: 22px;
+        width: 44px;
+        height: 34px;
+    }
+
+    .delivery-receipt {
+        width: 148px;
+        padding: 14px 15px 18px;
+    }
+
+    .delivery-receipt.settled {
+        left: 50%;
+        top: 150px;
+
+        width: 100%;
+
+        padding: 24px 22px 28px;
+    }
+
+    .delivery-receipt.settled .delivery-receipt-brand {
+        font-size: 14px;
+    }
+
+    .delivery-receipt.settled .delivery-receipt-heading {
+        font-size: 15px;
+    }
+
+    .delivery-receipt.settled .delivery-receipt-row {
+        font-size: 13px;
+    }
+
+    .delivery-cat-svg {
+        width: 72px;
+    }
+
+    .delivery-cat.parked .delivery-cat-svg,
+    .delivery-cat.resting .delivery-cat-svg {
+        width: 116px;
+    }
+
+    /*
+        No room to the side on narrow screens, so the
+        cat settles just above the receipt instead of
+        beside it, left of the emptied parcel — never
+        overlapping the receipt.
+    */
+    .delivery-cat.parked {
+        top: 56px;
+        left: 38%;
+    }
+
+    .delivery-cat.resting {
+        top: 74px;
+        left: 38%;
+    }
+
+    .delivery-pillow {
+        top: 118px;
+        left: 38%;
+
+        width: 150px;
+        height: 26px;
+    }
+}
+
+
+/* ========================= */
+/* CUSTOM OPTION PRICE + EXAMPLES */
+/* ========================= */
+
+.custom-check .custom-price {
+    margin-left: auto;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
+    color: #cdb8f2;
+}
+
+.custom-example {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 6px 0 2px 4px;
+
+    font-size: 12px;
+
+    color: rgba(221, 213, 235, 0.55);
+}
+
+.custom-example-thumb {
+    flex: none;
+
+    width: 72px;
+
+    padding: 0;
+
+    border: 1px solid rgba(190, 160, 240, 0.28);
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    background: rgba(0, 0, 0, 0.2);
+
+    cursor: zoom-in;
+
+    transition: width 0.3s ease, border-color 0.25s ease;
+}
+
+.custom-example-thumb:hover {
+    border-color: rgba(190, 160, 240, 0.55);
+}
+
+.custom-example-thumb img {
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+}
+
+.custom-example-thumb.enlarged {
+    width: min(240px, 60vw);
+
+    cursor: zoom-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .custom-example-thumb {
+        transition: none;
+    }
+}
+
+/* ========================= */
+/* PAYMENT METHOD — PHASE 3 */
+/* ========================= */
+
+.payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.payment-method {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-right: 0;
+    min-width: 120px;
+}
+
+.payment-method-label {
+    font-size: 14px;
+    color: inherit;
+}
+
+.payment-method-tag {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8f879e;
+}
+
+.payment-method.selected .payment-method-tag {
+    color: #cdb8f2;
+}
+
+.payment-method-primary.selected {
+    border-color: rgba(190, 160, 240, 0.75);
+}
+
+
+/* ========================= */
+/* PAYMENT STAGE PANELS */
+/* ========================= */
+
+.payment-stage {
+    margin-top: 24px;
+}
+
+.payment-panel {
+    margin-top: 8px;
+    padding: 20px 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(10, 6, 25, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.payment-panel-title {
+    margin-bottom: 16px;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #bca7e8;
+}
+
+.payment-summary-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.payment-summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.payment-summary-row span {
+    color: #8f879e;
+}
+
+.payment-summary-row strong {
+    color: #eee8ff;
+    text-align: right;
+}
+
+.payment-stage-button {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.payment-stage-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.payment-verify-note {
+    margin-top: 14px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #817694;
+}
+
+.payment-qr-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.payment-qr-image {
+    width: min(220px, 70vw);
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(190, 160, 240, 0.35);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+}
+
+.payment-qr-caption {
+    font-size: 15px;
+    color: #eee8ff;
+    letter-spacing: 0.5px;
+}
+
+.payment-instruction-block {
+    margin-bottom: 18px;
+}
+
+.payment-instruction-block p {
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #b9b0ca;
+}
+
+.payment-instruction-block strong {
+    color: #eee8ff;
+}
+
+.payment-copy-value {
+    display: block;
+    margin-top: 4px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #eee8ff;
+    font-size: 15px;
+    word-break: break-all;
+}
